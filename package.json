@@ -1,0 +1,31 @@
+{
+  "name": "graphql-sjs-models",
+  "version": "2017.7.8",
+  "description": "Converts schema.graphql to scalajs models",
+  "bin": {
+    "graphql-sjs-models": "bin/graphql-sjs-models"
+  },
+  "scripts": {
+    "prepublish": "sbt 'show fullOptJS'",
+    "test": "sbt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scalajs-react-interface/graphql-sjs-models.git"
+  },
+  "keywords": [
+    "scalajs",
+    "graphql",
+    "models",
+    "cli"
+  ],
+  "dependencies": {
+    "graphql": "^0.10.3"
+  },
+  "author": "chandu0101",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scalajs-react-interface/graphql-sjs-models/issues"
+  },
+  "homepage": "https://github.com/scalajs-react-interface/graphql-sjs-models#readme"
+}
