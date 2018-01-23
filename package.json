@@ -1,6 +1,6 @@
 {
   "name": "graphql-sjs-models",
-  "version": "2017.7.8",
+  "version": "2018.1.23",
   "description": "Converts schema.graphql to scalajs models",
   "bin": {
     "graphql-sjs-models": "bin/graphql-sjs-models"
