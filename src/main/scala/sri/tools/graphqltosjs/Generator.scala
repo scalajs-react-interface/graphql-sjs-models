@@ -133,6 +133,7 @@ object Generator  {
 
     val OUTPUT_PATH = getArg(commandArgs,"--output","--o").getOrElse("")
 
+    val RELAY_URL = getArg(commandArgs,"--relayUrl","--u").getOrElse("")
 
     val in = Fs.readFileSync(SCHEMA_PATH, "utf8").toString()
     val ast = GraphQL.parse(in)
@@ -169,7 +170,9 @@ object Generator  {
            .toISOString()}
          |
          |  don't modify this file directly */
-         |
+         |object Source {
+         |  val RELAY_URL: String = "$RELAY_URL"
+         |}
          | $tpes
          |
        """.stripMargin
