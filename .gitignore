@@ -27,6 +27,7 @@ project/plugins/project/
 examples/js/
 
 lib/main.js
+lib/main.js.map
 
 #node
 

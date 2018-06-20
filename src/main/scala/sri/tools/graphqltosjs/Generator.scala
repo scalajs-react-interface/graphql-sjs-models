@@ -135,6 +135,8 @@ object Generator  {
 
     val RELAY_URL = getArg(commandArgs,"--relayUrl","--u").getOrElse("")
 
+    val RELAY_WS_URL = getArg(commandArgs,"--relayWsUrl","--w").getOrElse("")
+
     val in = Fs.readFileSync(SCHEMA_PATH, "utf8").toString()
     val ast = GraphQL.parse(in)
     val tpes = ast.definitions
@@ -173,6 +175,7 @@ object Generator  {
          |  don't modify this file directly */
          |object Source {
          |  val RELAY_URL: String = "$RELAY_URL"
+         |  val RELAY_WS_URL: String = "$RELAY_WS_URL"
          |}
          | $tpes
          |
