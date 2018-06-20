@@ -5,6 +5,7 @@ import io.scalajs.nodejs.global
 
 import scala.scalajs.js
 
+
 object Generator  {
 
   val gqlTypes = Map("String" -> "String",
@@ -30,6 +31,8 @@ object Generator  {
   }
 
   def convertGraphFieldToScalaField(in: GraphQLDefinitionField) = {
+    //    global.console.log("converting type", in.name.value)
+    import io.scalajs.JSON
     val name = getScalaName(in.name.value)
 //    println(s"type dude : ${JSON.stringify(in.`type`)}")
     val tpe = getScalaType(in.`type`)
@@ -37,7 +40,7 @@ object Generator  {
   }
 
   def convertObjectDefinitionToScala(in: GraphQLDefinition) = {
-//    dom.window.console.log("converting type", in.name.value)
+//    global.console.log("converting type", in.name.value)
     val traitName = in.name.value
     val interfaces = in.interfaces.map(gi => gi.name.value).toList
     val ext =
@@ -51,9 +54,8 @@ object Generator  {
        |trait $traitName extends $ext  {
        |  ${fields
          .map(sf => {
-           val tpe = if(sf.name == "edges" && sf.tpe.contains("js.UndefOr[")) sf.tpe.trim.replace("js.UndefOr[","").init.init else sf.tpe
            if (sf.name == "id" && traitName != "Viewer") ""
-           else s"val ${sf.name} :${tpe} = js.native"
+           else s"val ${sf.name} :${sf.tpe} = js.native"
          }) //Bloody  hack to get rid of id
          .mkString("\n")}
        |}
@@ -61,7 +63,7 @@ object Generator  {
   }
 
   def convertInterfaceDefinitionToScala(in: GraphQLDefinition) = {
-//    dom.window.console.log("converting type", in.name.value)
+//    global.console.log("converting type", in.name.value)
     val traitName = in.name.value
     val fields = in.fields.map(convertGraphFieldToScalaField)
     s"""
@@ -76,7 +78,7 @@ object Generator  {
   }
 
   def convertInputObjectTypeDefinitionToScala(in: GraphQLDefinition) = {
-//    dom.window.console.log("converting type", in.name.value)
+//    global.console.log("converting type", in.name.value)
     val traitName = in.name.value
     val fields = in.fields.map(convertGraphFieldToScalaField)
     s"""
@@ -85,7 +87,7 @@ object Generator  {
        |trait $traitName extends js.Object  {
        |  ${fields
          .map(sf =>
-           s"val ${sf.name} :${sf.tpe} ${if (sf.tpe.contains("UndefOr[")) s" = js.undefined"
+           s"   val ${sf.name} :${sf.tpe} ${if (sf.tpe.contains("UndefOr[")) s" = js.undefined"
            else ""}")
          .mkString("\n")}
        |}
@@ -104,7 +106,7 @@ object Generator  {
   }
 
   def convertEnumTypeDefinitionToScala(in: GraphQLDefinition) = {
-//    dom.window.console.log("converting type", in.name.value)
+//    global.console.log("converting type", in.name.value)
     val traitName = in.name.value
     val values = in.values.map(_.name.value)
     s"""
@@ -177,6 +179,15 @@ object Generator  {
          |  val RELAY_URL: String = "$RELAY_URL"
          |  val RELAY_WS_URL: String = "$RELAY_WS_URL"
          |}
+         |
+         |object Scalars {
+         |  type Json = js.Array[js.Object]
+         |}
+         |import Scalars._
+         |
+         |trait SubscriptionFilterNode extends js.Object {
+         |}
+         |
          | $tpes
          |
        """.stripMargin
