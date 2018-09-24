@@ -1,6 +1,6 @@
 {
   "name": "graphql-sjs-models",
-  "version": "2018.06.22",
+  "version": "2018.9.24",
   "description": "Converts schema.graphql to scalajs models",
   "bin": {
     "graphql-sjs-models": "bin/graphql-sjs-models"
@@ -20,7 +20,7 @@
     "cli"
   ],
   "dependencies": {
-    "graphql": "^0.10.3"
+    "graphql": "^14.0.2"
   },
   "author": "chandu0101",
   "license": "ISC",

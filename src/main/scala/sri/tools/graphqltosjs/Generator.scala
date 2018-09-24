@@ -19,14 +19,14 @@ object Generator  {
                    isRequired: Boolean = false): String = {
 
     if (in.kind == GraphQLDefinitionFieldTypeKind.LIST_TYPE) {
-      if (isRequired) s"js.Array[${getScalaType(in.`type`, false)}]"
-      else s"js.UndefOr[js.Array[${getScalaType(in.`type`, false)}]]"
+      if (isRequired) s"js.Array[${getScalaType(in.`type`, true)}]"
+      else s"UndefNullOr[js.Array[${getScalaType(in.`type`, true)}]]"
     } else if (in.kind == GraphQLDefinitionFieldTypeKind.NON_NULL_TYPE) {
       getScalaType(in.`type`, true)
     } else if (in.kind == GraphQLDefinitionFieldTypeKind.NAMED_TYPE) {
       val t = in.name.value
       if (isRequired) gqlTypes.getOrElse(t, t)
-      else s"js.UndefOr[${gqlTypes.getOrElse(t, t)}]"
+      else s"UndefNullOr[${gqlTypes.getOrElse(t, t)}]"
     } else getScalaType(in.`type`, false)
   }
 
@@ -94,7 +94,7 @@ object Generator  {
        |
        |object $traitName {
        |
-       | def apply(${fields.map(sf => s"${sf.name} :${sf.tpe.replace("js.UndefOr[","OptionalParam[")} ${if (sf.tpe.contains("UndefOr[")) s" = OptDefault" else ""}").mkString(",\n")}):$traitName = {
+       | def apply(${fields.map(sf => s"${sf.name} :${sf.tpe.replace("UndefNullOr[","OptionalParam[")} ${if (sf.tpe.contains("UndefNullOr[")) s" = OptDefault" else ""}").mkString(",\n")}):$traitName = {
        |
        |   val p = FunctionObjectMacro()
        |   p.asInstanceOf[$traitName]
@@ -166,7 +166,8 @@ object Generator  {
          |
          |import scalajsplus.{
          |  OptDefault,
-         |  OptionalParam
+         |  OptionalParam,
+         |  UndefNullOr
          |}
          |import scalajsplus.macros.FunctionObjectMacro
          |
